@@ -1,12 +1,5 @@
 import 'package:flutter/material.dart';
 
-final class AddPatientPage extends StatelessWidget {
-  const AddPatientPage({super.key});
-  @override
-  Widget build(BuildContext context) =>
-      const Scaffold(body: Center(child: Text('Hasta Ekle')));
-}
-
 final class PatientsListPage extends StatelessWidget {
   const PatientsListPage({super.key});
   @override

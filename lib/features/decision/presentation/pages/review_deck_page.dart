@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:plastichoose/app/di.dart';
 import 'package:plastichoose/features/patients/domain/entities/decision_status.dart';
+import 'package:plastichoose/features/patients/domain/usecases/patient_usecases.dart';
 import 'package:plastichoose/features/decision/presentation/controllers/review_deck_controller.dart';
 import 'package:plastichoose/features/decision/presentation/widgets/modern_review_card.dart';
 
@@ -11,7 +13,10 @@ final class ReviewDeckPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<ReviewDeckController>(
-      create: (_) => ReviewDeckController()..refresh(),
+      create: (_) => ReviewDeckController(
+        listPatients: getIt<ListPatients>(),
+        decidePatient: getIt<DecidePatient>(),
+      )..refresh(),
       child: const _ReviewDeckPageContent(),
     );
   }
@@ -168,6 +173,7 @@ final class _ReviewDeckPageContent extends StatelessWidget {
                               controller.rejectPatient(p);
                             }
                           },
+                          onSkip: (p) => controller.skipPatient(p),
                           secondary: secondary,
                           tertiary: tertiary,
                         );

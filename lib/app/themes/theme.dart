@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 /// Application theme: white surface with accent secondary colors.
 ThemeData buildAppTheme() {
@@ -20,6 +21,9 @@ ThemeData buildAppTheme() {
       backgroundColor: Colors.white,
       foregroundColor: Colors.black,
       elevation: 0,
+      systemOverlayStyle: SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+      ),
     ),
     inputDecorationTheme: const InputDecorationTheme(
       border: OutlineInputBorder(),

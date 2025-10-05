@@ -45,5 +45,10 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<!-- Camera and photo library permissions for image_picker -->
+	<key>NSCameraUsageDescription</key>
+	<string>Bu uygulama hasta fotoğrafları çekmek için kamera erişimi gerektirir.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Bu uygulama hasta fotoğrafları seçmek için galeri erişimi gerektirir.</string>
 </dict>
 </plist>

@@ -9,6 +9,7 @@ import 'package:plastichoose/features/decision/presentation/widgets/swipe_feedba
 final class ModernReviewCard extends StatefulWidget {
   final Patient patient;
   final void Function(Patient, DecisionStatus) onDecision;
+  final void Function(Patient) onSkip;
   final Color secondary;
   final Color tertiary;
 
@@ -16,6 +17,7 @@ final class ModernReviewCard extends StatefulWidget {
     super.key,
     required this.patient,
     required this.onDecision,
+    required this.onSkip,
     required this.secondary,
     required this.tertiary,
   });
@@ -125,6 +127,7 @@ final class _ModernReviewCardState extends State<ModernReviewCard>
                         ),
                         Expanded(
                           child: ReviewCardGallery(
+                            key: ValueKey<String>(widget.patient.id),
                             patient: widget.patient,
                             tertiary: widget.tertiary,
                           ),
@@ -207,7 +210,9 @@ final class _ModernReviewCardState extends State<ModernReviewCard>
   }
 
   void _handleSkip() {
-    _animateCardOut('bottom', () {});
+    _animateCardOut('bottom', () {
+      widget.onSkip(widget.patient);
+    });
   }
 
   void _animateCardOut(String direction, VoidCallback onComplete) {

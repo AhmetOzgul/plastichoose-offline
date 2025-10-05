@@ -27,6 +27,19 @@ final class _ReviewCardGalleryState extends State<ReviewCardGallery> {
   }
 
   @override
+  void didUpdateWidget(covariant ReviewCardGallery oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.patient.id != widget.patient.id) {
+      // Hasta değiştiğinde galeriyi başa al
+      if (_pageController.hasClients) {
+        _pageController.jumpToPage(0);
+      } else {
+        _pageController = PageController(initialPage: 0);
+      }
+    }
+  }
+
+  @override
   void dispose() {
     _pageController.dispose();
     super.dispose();

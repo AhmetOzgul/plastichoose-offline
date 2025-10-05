@@ -1,10 +1,19 @@
 import 'package:flutter/foundation.dart';
+import 'package:plastichoose/core/result/result.dart';
 import 'package:plastichoose/features/patients/domain/entities/patient.dart';
 import 'package:plastichoose/features/patients/domain/entities/decision_status.dart';
+import 'package:plastichoose/features/patients/domain/usecases/patient_usecases.dart';
 
 /// Basit UI odaklı controller: listeyi tutar ve karar/atla aksiyonlarını yönetir.
 final class ReviewDeckController extends ChangeNotifier {
-  ReviewDeckController();
+  final ListPatients _listPatients;
+  final DecidePatient _decidePatient;
+
+  ReviewDeckController({
+    required ListPatients listPatients,
+    required DecidePatient decidePatient,
+  }) : _listPatients = listPatients,
+       _decidePatient = decidePatient;
 
   bool isLoading = true;
   String? errorMessage;
@@ -21,12 +30,24 @@ final class ReviewDeckController extends ChangeNotifier {
     errorMessage = null;
     notifyListeners();
     try {
-      // TODO: Data katmanı hazır olunca undecided hastaları yükle.
-      // Şimdilik boş liste ile ilerliyoruz.
-      _undecided.clear();
-      _index = 0;
-      isLoading = false;
-      notifyListeners();
+      final Result<List<Patient>> res = await _listPatients.execute(
+        const ListPatientsParams(status: DecisionStatus.none),
+      );
+      res.when(
+        ok: (List<Patient> items) {
+          _undecided
+            ..clear()
+            ..addAll(items);
+          _index = 0;
+          isLoading = false;
+          notifyListeners();
+        },
+        err: (Failure f) {
+          isLoading = false;
+          errorMessage = f.message;
+          notifyListeners();
+        },
+      );
     } catch (e) {
       isLoading = false;
       errorMessage = 'Liste yüklenemedi';
@@ -34,31 +55,41 @@ final class ReviewDeckController extends ChangeNotifier {
     }
   }
 
-  void acceptPatient(Patient patient) {
-    _applyDecision(DecisionStatus.accepted);
+  Future<void> acceptPatient(Patient patient) async {
+    await _applyDecision(DecisionStatus.accepted);
   }
 
-  void rejectPatient(Patient patient) {
-    _applyDecision(DecisionStatus.rejected);
+  Future<void> rejectPatient(Patient patient) async {
+    await _applyDecision(DecisionStatus.rejected);
   }
 
   void skipPatient(Patient patient) {
     _next();
   }
 
-  void _applyDecision(DecisionStatus status) {
+  Future<void> _applyDecision(DecisionStatus status) async {
     if (_undecided.isEmpty) return;
     final Patient p = _undecided[_index];
-    _undecided[_index] = p.copyWith(
-      decisionStatus: status,
-      decisionAt: DateTime.now(),
+    final Result<Patient> res = await _decidePatient.execute(
+      DecidePatientParams(
+        patientId: p.id,
+        decision: status,
+        decidedAt: DateTime.now(),
+      ),
     );
-    // TODO: UseCase ile persist edilecek.
-    _undecided.removeAt(_index);
-    if (_index >= _undecided.length) {
-      _index = (_undecided.isEmpty) ? 0 : _undecided.length - 1;
-    }
-    notifyListeners();
+    res.when(
+      ok: (Patient _) {
+        _undecided.removeAt(_index);
+        if (_index >= _undecided.length) {
+          _index = (_undecided.isEmpty) ? 0 : _undecided.length - 1;
+        }
+        notifyListeners();
+      },
+      err: (Failure f) {
+        errorMessage = f.message;
+        notifyListeners();
+      },
+    );
   }
 
   void _next() {
