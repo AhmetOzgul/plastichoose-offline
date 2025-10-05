@@ -1,42 +1,22 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:plastichoose/features/patients/domain/entities/decision_status.dart';
 
+part 'patient.freezed.dart';
+part 'patient.g.dart';
+
 /// Patient domain entity.
-final class Patient {
-  final String id;
-  final String name;
-  final List<String> images;
-  final DecisionStatus decisionStatus;
-  final DateTime? decisionAt;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-
-  const Patient({
-    required this.id,
-    required this.name,
-    required this.images,
-    required this.decisionStatus,
-    required this.decisionAt,
-    required this.createdAt,
-    required this.updatedAt,
-  });
-
-  Patient copyWith({
-    String? id,
-    String? name,
-    List<String>? images,
-    DecisionStatus? decisionStatus,
+@freezed
+class Patient with _$Patient {
+  const factory Patient({
+    required String id,
+    required String name,
+    required List<String> images,
+    @Default(DecisionStatus.none) DecisionStatus decisionStatus,
     DateTime? decisionAt,
-    DateTime? createdAt,
-    DateTime? updatedAt,
-  }) {
-    return Patient(
-      id: id ?? this.id,
-      name: name ?? this.name,
-      images: images ?? this.images,
-      decisionStatus: decisionStatus ?? this.decisionStatus,
-      decisionAt: decisionAt ?? this.decisionAt,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-    );
-  }
+    required DateTime createdAt,
+    required DateTime updatedAt,
+  }) = _Patient;
+
+  factory Patient.fromJson(Map<String, dynamic> json) =>
+      _$PatientFromJson(json);
 }
