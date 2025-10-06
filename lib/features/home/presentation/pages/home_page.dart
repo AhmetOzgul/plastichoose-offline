@@ -37,6 +37,13 @@ final class HomePage extends StatelessWidget {
         subtitle: 'Eski kayıtları sil',
         color: Colors.red,
       ),
+      const _HomeItem(
+        icon: Icons.ios_share,
+        label: 'Çıktı Alma',
+        route: '/export',
+        subtitle: 'Veri dışa aktar',
+        color: Colors.blue,
+      ),
     ];
     final ColorScheme scheme = Theme.of(context).colorScheme;
     final Color secondary = scheme.secondary;

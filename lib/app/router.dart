@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:plastichoose/features/patients/presentation/pages/add_patient_page.dart';
-import 'package:plastichoose/features/home/presentation/pages/_stubs.dart';
+import 'package:plastichoose/features/cleanup/presentation/pages/cleanup_page.dart';
+import 'package:plastichoose/features/export/presentation/pages/export_page.dart';
 import 'package:plastichoose/features/home/presentation/pages/home_page.dart';
 import 'package:plastichoose/features/decision/presentation/pages/review_deck_page.dart';
 import 'package:plastichoose/features/patients/presentation/pages/patient_list_page.dart';

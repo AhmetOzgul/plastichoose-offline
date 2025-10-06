@@ -148,14 +148,13 @@ final class _PatientListPageContent extends StatelessWidget {
   }
 
   void _showPatientDetails(BuildContext context, dynamic patient) {
+    final PatientListController controller = context
+        .read<PatientListController>();
     Navigator.of(context).push(
       MaterialPageRoute<void>(
         builder: (BuildContext context) => PatientDetailsPage(
           patient: patient,
-          onPatientDeleted: () {
-            // Hasta silindikten sonra listeyi yenile
-            context.read<PatientListController>().refresh();
-          },
+          onPatientDeleted: () => controller.refresh(),
         ),
         fullscreenDialog: true,
       ),

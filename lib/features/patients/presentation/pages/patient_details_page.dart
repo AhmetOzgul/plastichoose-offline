@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:plastichoose/features/patients/domain/entities/patient.dart';
 import 'package:plastichoose/features/decision/presentation/widgets/full_screen_image_viewer.dart';
 import 'package:plastichoose/features/patients/presentation/widgets/delete_patient_dialog.dart';
@@ -287,34 +286,46 @@ final class _PatientDetailsPageState extends State<PatientDetailsPage> {
 
             result.when(
               ok: (_) {
-                // Hasta silindikten sonra ana sayfaya dön
-                Navigator.of(context).pop(); // Dialog'u kapat
-                Navigator.of(context).pop(); // Detay sayfasını kapat
-                widget.onPatientDeleted?.call(); // Callback'i çağır
+                // Önce dialogu kapat
+                if (Navigator.of(dialogContext).canPop()) {
+                  Navigator.of(dialogContext).pop();
+                }
+                // Listeyi yenileme talebini, sayfa hala mounted iken bildir
+                widget.onPatientDeleted?.call();
+                // En son detay sayfasını kapat
+                if (mounted && Navigator.of(context).canPop()) {
+                  Navigator.of(context).pop();
+                }
               },
               err: (failure) {
-                setState(() {
-                  _isDeleting = false;
-                });
+                if (mounted) {
+                  setState(() {
+                    _isDeleting = false;
+                  });
+                }
                 // Hata mesajı göster
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(failure.message),
-                    backgroundColor: Colors.red.shade600,
-                  ),
-                );
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(failure.message),
+                      backgroundColor: Colors.red.shade600,
+                    ),
+                  );
+                }
               },
             );
           } catch (e) {
-            setState(() {
-              _isDeleting = false;
-            });
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('Hasta silinirken hata oluştu: $e'),
-                backgroundColor: Colors.red.shade600,
-              ),
-            );
+            if (mounted) {
+              setState(() {
+                _isDeleting = false;
+              });
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Hasta silinirken hata oluştu: $e'),
+                  backgroundColor: Colors.red.shade600,
+                ),
+              );
+            }
           }
         },
       ),

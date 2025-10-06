@@ -133,7 +133,6 @@ final class DeletePatientDialog extends StatelessWidget {
         ),
         ElevatedButton(
           onPressed: () {
-            Navigator.of(context).pop();
             onConfirm();
           },
           style: ElevatedButton.styleFrom(

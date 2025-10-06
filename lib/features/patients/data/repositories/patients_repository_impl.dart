@@ -135,13 +135,15 @@ final class PatientsRepositoryImpl implements PatientsRepository {
 
       final Patient oldPatient = existingPatients[index];
 
-      // If images changed, delete old images
-      if (oldPatient.images != patient.images) {
-        for (final String oldImagePath in oldPatient.images) {
-          final File oldImageFile = File(oldImagePath);
-          if (await oldImageFile.exists()) {
-            await oldImageFile.delete();
-          }
+      // Delete only images that were removed (content-based diff instead of
+      // list identity). This avoids deleting still-used image files.
+      final Set<String> oldSet = Set<String>.from(oldPatient.images);
+      final Set<String> newSet = Set<String>.from(patient.images);
+      final Iterable<String> removed = oldSet.difference(newSet);
+      for (final String path in removed) {
+        final File f = File(path);
+        if (await f.exists()) {
+          await f.delete();
         }
       }
 
