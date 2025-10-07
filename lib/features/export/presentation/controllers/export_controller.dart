@@ -29,6 +29,8 @@ final class ExportController extends ChangeNotifier {
 
   List<Patient> _lastPreviewPatients = <Patient>[];
 
+  DateTimeRange? get range => _range;
+
   void setRange(DateTimeRange? range) {
     _range = range;
     notifyListeners();

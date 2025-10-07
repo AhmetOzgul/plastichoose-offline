@@ -5,7 +5,7 @@ import 'package:plastichoose/app/di.dart';
 import 'package:plastichoose/features/cleanup/presentation/controllers/cleanup_controller.dart';
 import 'package:plastichoose/features/patients/domain/usecases/patient_usecases.dart';
 import 'package:plastichoose/features/cleanup/presentation/widgets/cleanup_warning_card.dart';
-import 'package:plastichoose/features/cleanup/presentation/widgets/cleanup_date_selector.dart';
+import 'package:plastichoose/core/widgets/date_range_selector.dart';
 import 'package:plastichoose/features/cleanup/presentation/widgets/cleanup_options.dart';
 import 'package:plastichoose/features/cleanup/presentation/widgets/cleanup_preview.dart';
 import 'package:plastichoose/features/cleanup/presentation/widgets/cleanup_actions.dart';
@@ -65,7 +65,14 @@ final class _CleanupPageContent extends StatelessWidget {
                             children: <Widget>[
                               const CleanupWarningCard(),
                               const SizedBox(height: 24),
-                              CleanupDateSelector(controller: controller),
+                              DateRangeSelector(
+                                label: 'Tümü',
+                                value: controller.range,
+                                onChanged: (DateTimeRange? r) async {
+                                  controller.setRange(r);
+                                  await controller.refreshPreview();
+                                },
+                              ),
                               const SizedBox(height: 24),
                               CleanupOptions(controller: controller),
                               const Spacer(),

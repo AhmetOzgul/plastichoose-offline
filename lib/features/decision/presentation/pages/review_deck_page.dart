@@ -6,6 +6,7 @@ import 'package:plastichoose/features/patients/domain/entities/decision_status.d
 import 'package:plastichoose/features/patients/domain/usecases/patient_usecases.dart';
 import 'package:plastichoose/features/decision/presentation/controllers/review_deck_controller.dart';
 import 'package:plastichoose/features/decision/presentation/widgets/modern_review_card.dart';
+import 'package:plastichoose/core/widgets/gradient_button.dart';
 
 final class ReviewDeckPage extends StatelessWidget {
   const ReviewDeckPage({super.key});
@@ -124,9 +125,32 @@ final class _ReviewDeckPageContent extends StatelessWidget {
                                   textAlign: TextAlign.center,
                                 ),
                                 const SizedBox(height: 16),
-                                ElevatedButton(
-                                  onPressed: controller.refresh,
-                                  child: const Text('Tekrar Dene'),
+                                Align(
+                                  child: SizedBox(
+                                    width: 150,
+                                    child: GradientButton(
+                                      colors: <Color>[secondary, tertiary],
+                                      onPressed: controller.refresh,
+                                      child: const Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: <Widget>[
+                                          Icon(
+                                            Icons.refresh,
+                                            color: Colors.white,
+                                          ),
+                                          SizedBox(width: 8),
+                                          Text(
+                                            'Tekrar Dene',
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -156,9 +180,32 @@ final class _ReviewDeckPageContent extends StatelessWidget {
                                   textAlign: TextAlign.center,
                                 ),
                                 const SizedBox(height: 16),
-                                ElevatedButton(
-                                  onPressed: controller.refresh,
-                                  child: const Text('Yenile'),
+                                Align(
+                                  child: SizedBox(
+                                    width: 150,
+                                    child: GradientButton(
+                                      colors: <Color>[secondary, tertiary],
+                                      onPressed: controller.refresh,
+                                      child: const Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: <Widget>[
+                                          Icon(
+                                            Icons.refresh,
+                                            color: Colors.white,
+                                          ),
+                                          SizedBox(width: 8),
+                                          Text(
+                                            'Yenile',
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),

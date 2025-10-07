@@ -24,6 +24,8 @@ final class CleanupController extends ChangeNotifier {
   bool isLoading = false;
   String? errorMessage;
 
+  DateTimeRange? get range => _range;
+
   /// Sets the date range for filtering.
   void setRange(DateTimeRange? range) {
     _range = range;

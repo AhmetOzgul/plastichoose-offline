@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:plastichoose/features/patients/presentation/controllers/add_patient_controller.dart';
-import 'package:plastichoose/features/common/widgets/gradient_button.dart';
-import 'package:plastichoose/features/common/widgets/labeled_text_field.dart';
-import 'package:plastichoose/features/common/widgets/error_banner.dart';
+import 'package:plastichoose/core/widgets/gradient_button.dart';
+import 'package:plastichoose/core/widgets/labeled_text_field.dart';
+import 'package:plastichoose/core/widgets/error_banner.dart';
 
 final class AddPatientPage extends StatelessWidget {
   const AddPatientPage({super.key});

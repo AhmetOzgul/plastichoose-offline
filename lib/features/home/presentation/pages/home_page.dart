@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:plastichoose/features/common/widgets/custom_app_bar.dart';
+import 'package:plastichoose/core/widgets/custom_app_bar.dart';
 
 /// Home page with grid navigation to feature sections.
 final class HomePage extends StatelessWidget {

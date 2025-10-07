@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:plastichoose/app/di.dart';
 import 'package:plastichoose/features/export/presentation/controllers/export_controller.dart';
 import 'package:plastichoose/features/patients/domain/usecases/patient_usecases.dart';
+import 'package:plastichoose/core/widgets/date_range_selector.dart';
+import 'package:plastichoose/core/widgets/gradient_button.dart';
 
 final class ExportPage extends StatelessWidget {
   const ExportPage({super.key});
@@ -59,7 +61,14 @@ final class _ExportPageContent extends StatelessWidget {
                             children: <Widget>[
                               _ExportIntroCard(),
                               const SizedBox(height: 24),
-                              _ExportDateSelector(controller: controller),
+                              DateRangeSelector(
+                                label: 'Tümü',
+                                value: controller.range,
+                                onChanged: (DateTimeRange? r) async {
+                                  controller.setRange(r);
+                                  await controller.refreshPreview();
+                                },
+                              ),
                               const SizedBox(height: 24),
                               _ExportOptions(controller: controller),
                               const SizedBox(height: 16),
@@ -242,38 +251,7 @@ final class _ExportIntroCard extends StatelessWidget {
   }
 }
 
-final class _ExportDateSelector extends StatelessWidget {
-  final ExportController controller;
-  const _ExportDateSelector({required this.controller});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: <Widget>[
-        Expanded(
-          child: OutlinedButton.icon(
-            onPressed: () async {
-              final DateTime now = DateTime.now();
-              final DateTimeRange? range = await showDateRangePicker(
-                context: context,
-                firstDate: DateTime(now.year - 5),
-                lastDate: DateTime(now.year + 1),
-                initialDateRange: DateTimeRange(
-                  start: now.subtract(const Duration(days: 30)),
-                  end: now,
-                ),
-              );
-              controller.setRange(range);
-              await controller.refreshPreview();
-            },
-            icon: const Icon(Icons.date_range),
-            label: Text(controller.getDateRangeText()),
-          ),
-        ),
-      ],
-    );
-  }
-}
+// Date range selector moved to shared `DateRangeSelector` widget
 
 final class _ExportOptions extends StatelessWidget {
   final ExportController controller;
@@ -402,16 +380,24 @@ final class _ExportActions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Color secondary = Theme.of(context).colorScheme.secondary;
+    final Color tertiary = Theme.of(context).colorScheme.tertiary;
+    final List<Color> colors = isEnabled
+        ? <Color>[secondary, tertiary]
+        : <Color>[secondary.withOpacity(0.3), tertiary.withOpacity(0.3)];
     return Row(
       children: <Widget>[
         Expanded(
-          child: ElevatedButton.icon(
+          child: GradientButton(
+            colors: colors,
             onPressed: isEnabled ? onExport : null,
-            icon: const Icon(Icons.ios_share),
-            label: const Text('Dışa Aktar'),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blue.shade600,
-              foregroundColor: Colors.white,
+            child: const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Icon(Icons.ios_share, color: Colors.white),
+                SizedBox(width: 8),
+                Text('Dışa Aktar', style: TextStyle(color: Colors.white)),
+              ],
             ),
           ),
         ),
