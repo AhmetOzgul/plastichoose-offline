@@ -3,11 +3,12 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:plastichoose/features/patients/presentation/controllers/patient_list_controller.dart';
 import 'package:plastichoose/features/patients/presentation/widgets/patient_card.dart';
-import 'package:plastichoose/features/patients/presentation/widgets/error_banner.dart';
+import 'package:plastichoose/core/widgets/error_banner.dart';
 import 'package:plastichoose/features/patients/presentation/widgets/empty_state_widget.dart';
 import 'package:plastichoose/features/patients/presentation/widgets/status_change_dialog.dart';
 import 'package:plastichoose/features/patients/presentation/widgets/delete_patient_dialog.dart';
 import 'package:plastichoose/features/patients/presentation/pages/patient_details_page.dart';
+import 'package:plastichoose/features/patients/domain/entities/patient.dart';
 
 final class PatientListPage extends StatelessWidget {
   const PatientListPage({super.key});
@@ -147,7 +148,7 @@ final class _PatientListPageContent extends StatelessWidget {
     );
   }
 
-  void _showPatientDetails(BuildContext context, dynamic patient) {
+  void _showPatientDetails(BuildContext context, Patient patient) {
     final PatientListController controller = context
         .read<PatientListController>();
     Navigator.of(context).push(
@@ -161,7 +162,7 @@ final class _PatientListPageContent extends StatelessWidget {
     );
   }
 
-  void _showStatusChangeDialog(BuildContext context, dynamic patient) {
+  void _showStatusChangeDialog(BuildContext context, Patient patient) {
     final controller = context.read<PatientListController>();
 
     showDialog<void>(
@@ -175,7 +176,7 @@ final class _PatientListPageContent extends StatelessWidget {
     );
   }
 
-  void _showDeleteDialog(BuildContext context, dynamic patient) {
+  void _showDeleteDialog(BuildContext context, Patient patient) {
     final controller = context.read<PatientListController>();
 
     showDialog<void>(

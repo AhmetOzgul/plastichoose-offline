@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:uuid/uuid.dart';
+import 'package:plastichoose/core/constants/storage_constants.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:plastichoose/core/result/result.dart';
@@ -16,7 +18,9 @@ final class PatientsRepositoryImpl implements PatientsRepository {
     List<String> imagePaths,
   ) async {
     final Directory appDir = await getApplicationDocumentsDirectory();
-    final Directory imagesDir = Directory('${appDir.path}/patient_images');
+    final Directory imagesDir = Directory(
+      '${appDir.path}/${StorageConstants.patientImagesDirName}',
+    );
 
     if (!await imagesDir.exists()) {
       await imagesDir.create(recursive: true);
@@ -24,10 +28,11 @@ final class PatientsRepositoryImpl implements PatientsRepository {
 
     final List<String> copiedPaths = <String>[];
 
+    final Uuid uuid = const Uuid();
     for (final String originalPath in imagePaths) {
       final File originalFile = File(originalPath);
-      final String fileName =
-          '${DateTime.now().millisecondsSinceEpoch}_${originalFile.path.split('/').last}';
+      final String ext = originalFile.path.split('.').last;
+      final String fileName = '${uuid.v4()}.$ext';
       final String newPath = '${imagesDir.path}/$fileName';
 
       await originalFile.copy(newPath);

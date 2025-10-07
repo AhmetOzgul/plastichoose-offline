@@ -6,6 +6,7 @@ import 'package:plastichoose/features/patients/presentation/controllers/add_pati
 import 'package:plastichoose/core/widgets/gradient_button.dart';
 import 'package:plastichoose/core/widgets/labeled_text_field.dart';
 import 'package:plastichoose/core/widgets/error_banner.dart';
+import 'package:plastichoose/core/constants/app_constants.dart';
 
 final class AddPatientPage extends StatelessWidget {
   const AddPatientPage({super.key});
@@ -139,7 +140,7 @@ final class AddPatientPage extends StatelessWidget {
                       ),
                       const SizedBox(height: 16),
                       Text(
-                        'Görseller (${controller.selectedImages.length}/50)',
+                        'Görseller (${controller.selectedImages.length}/${AppConstants.maxImagesPerPatient})',
                         style: Theme.of(context).textTheme.titleMedium,
                       ),
                       const SizedBox(height: 8),

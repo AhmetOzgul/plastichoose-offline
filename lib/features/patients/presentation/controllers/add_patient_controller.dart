@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:plastichoose/app/di.dart';
 import 'package:plastichoose/features/patients/domain/usecases/patient_usecases.dart';
+import 'package:plastichoose/core/constants/app_constants.dart';
 
 final class AddPatientController extends ChangeNotifier {
   final TextEditingController nameController = TextEditingController();
@@ -22,7 +23,7 @@ final class AddPatientController extends ChangeNotifier {
         imageQuality: 85,
       );
       for (final XFile file in files) {
-        if (selectedImages.length >= 50) break;
+        if (selectedImages.length >= AppConstants.maxImagesPerPatient) break;
         selectedImages.add(File(file.path));
       }
       notifyListeners();
