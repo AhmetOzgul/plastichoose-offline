@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:plastichoose/core/widgets/custom_app_bar.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 /// Home page with grid navigation to feature sections.
 final class HomePage extends StatelessWidget {
@@ -30,6 +32,14 @@ final class HomePage extends StatelessWidget {
         subtitle: 'Hasta oluştur',
         color: Colors.blue,
       ),
+
+      const _HomeItem(
+        icon: Icons.ios_share,
+        label: 'Çıktı Alma',
+        route: '/export',
+        subtitle: 'Veri dışa aktar',
+        color: Colors.blue,
+      ),
       const _HomeItem(
         icon: Icons.cleaning_services,
         label: 'Temizlik',
@@ -38,11 +48,11 @@ final class HomePage extends StatelessWidget {
         color: Colors.red,
       ),
       const _HomeItem(
-        icon: Icons.ios_share,
-        label: 'Çıktı Alma',
-        route: '/export',
-        subtitle: 'Veri dışa aktar',
-        color: Colors.blue,
+        icon: Icons.feedback_outlined,
+        label: 'Geri Bildirim',
+        route: '/feedback',
+        subtitle: 'Öneri / hata bildir',
+        color: Colors.orange,
       ),
     ];
     final ColorScheme scheme = Theme.of(context).colorScheme;
@@ -84,7 +94,7 @@ final class HomePage extends StatelessWidget {
                             title: e.label,
                             subtitle: e.subtitle ?? '',
                             color: e.color ?? scheme.secondary,
-                            onTap: () => context.go(e.route),
+                            onTap: () => _handleNav(context, e.route),
                           ),
                         )
                         .toList(),
@@ -95,6 +105,80 @@ final class HomePage extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  void _handleNav(BuildContext context, String route) {
+    if (route == '/feedback') {
+      _showFeedbackDialog(context);
+      return;
+    }
+    context.go(route);
+  }
+
+  void _showFeedbackDialog(BuildContext context) {
+    showDialog<void>(
+      context: context,
+      builder: (BuildContext ctx) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          title: const Text('Geri Bildirim'),
+          content: const Text(
+            'Uygulama ile alakalı hata, istek veya önerilerinizi belirtmek için '
+            'aşağıdaki butona tıklayınız. Bu buton sizi Google Forms sayfasına '
+            'yönlendirecektir.',
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.of(ctx).pop(),
+              child: const Text('İptal'),
+            ),
+            ElevatedButton.icon(
+              onPressed: () async {
+                final String url = dotenv.get(
+                  'FEEDBACK_FORM_URL',
+                  fallback: '',
+                );
+                if (url.isEmpty) {
+                  Navigator.of(ctx).pop();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: const Text('Bağlantı ayarlı değil (.env)'),
+                      backgroundColor: Colors.red.shade600,
+                    ),
+                  );
+                  return;
+                }
+                final Uri uri = Uri.parse(url);
+                bool opened = false;
+                try {
+                  opened = await launchUrl(
+                    uri,
+                    mode: LaunchMode.externalApplication,
+                  );
+                } catch (_) {
+                  opened = false;
+                }
+                if (!opened && context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: const Text(
+                        'Bağlantı açılamadı. Lütfen bir tarayıcı yükleyin.',
+                      ),
+                      backgroundColor: Colors.red.shade600,
+                    ),
+                  );
+                }
+                if (context.mounted) Navigator.of(ctx).pop();
+              },
+              icon: const Icon(Icons.open_in_new),
+              label: const Text('Formu Aç'),
+            ),
+          ],
+        );
+      },
     );
   }
 }
